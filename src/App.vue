@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Todo</router-link> |
+      <router-link to="/todos">Todo</router-link> |
       <router-link to="/auth">Auth</router-link>
     </div>
     <v-app>

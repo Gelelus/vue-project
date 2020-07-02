@@ -1,20 +1,20 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Todo from "../views/Todo.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "Todo",
-    component: Todo
+    path: "/todos",
+    name: "Todos",
+    component: () =>
+      import(/* webpackChunkName: "todos" */ "../views/todos/Todos.vue")
   },
   {
     path: "/auth",
     name: "Auth",
-
-    component: () => import("../views/Auth.vue")
+    component: () =>
+      import(/* webpackChunkName: "auth" */ "../views/auth/Auth.vue")
   }
 ];
 
