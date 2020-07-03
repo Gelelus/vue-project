@@ -1,22 +1,55 @@
 import Vue from "vue";
 
 const state = {
-  todos: []
+  todos: [],
+  editedTodo: {
+    name: "",
+    todoStatus: false,
+    description: ""
+  },
+  dialog: false,
+  edited: false
 };
 
 const getters = {
   todos: state => {
     return state.todos;
+  },
+  dialog: state => {
+    return state.dialog;
+  },
+  editedTodo: state => {
+    return state.editedTodo;
+  },
+  edited: state => {
+    return state.edited;
   }
 };
 
 const mutations = {
+  setEditMode(state, payload) {
+    state.edited = true;
+    state.dialog = true;
+    Object.assign(state.editedTodo, payload);
+  },
+  UnSetEditMode(state) {
+    state.edited = false;
+    state.dialog = false;
+    const defaultTodo = {
+      name: "",
+      todoStatus: false,
+      description: ""
+    };
+    Object.assign(state.editedTodo, defaultTodo);
+  },
+  showDialog(state) {
+    state.dialog = true;
+  },
+  closeDialog(state) {
+    state.dialog = false;
+  },
   setList(state, payload) {
     state.todos = payload;
-    console.log(state.todos);
-  },
-  editTodo: (state, payload) => {
-    Object.assign(state.todos[payload.editedIndex], payload.editedItem);
   }
 };
 
