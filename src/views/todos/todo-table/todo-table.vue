@@ -50,20 +50,20 @@ export default {
         text: "Names",
         align: "start",
         sortable: false,
-        value: "name",
+        value: "name"
       },
 
-      { text: "Actions", value: "actions", sortable: false },
-    ],
+      { text: "Actions", value: "actions", sortable: false }
+    ]
   }),
   computed: {
-    ...mapGetters(["todos"]),
+    ...mapGetters(["todos"])
   },
   created() {
     this.getTodoList();
   },
   components: {
-    appDialog: dialog,
+    appDialog: dialog
   },
   methods: {
     ...mapActions(["deleteTodo", "editTodo", "getTodoList"]),
@@ -82,7 +82,7 @@ export default {
     },
     detail(item) {
       console.log(item);
-    },
-  },
+    }
+  }
 };
 </script>
