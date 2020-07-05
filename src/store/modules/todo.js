@@ -8,7 +8,8 @@ const state = {
     description: ""
   },
   dialog: false,
-  edited: false
+  edited: false,
+  detailTodo: {}
 };
 
 const getters = {
@@ -23,6 +24,9 @@ const getters = {
   },
   edited: state => {
     return state.edited;
+  },
+  detailTodo: state => {
+    return state.detailTodo;
   }
 };
 
@@ -32,7 +36,7 @@ const mutations = {
     state.dialog = true;
     Object.assign(state.editedTodo, payload);
   },
-  UnSetEditMode(state) {
+  unSetEditMode(state) {
     state.edited = false;
     state.dialog = false;
     const defaultTodo = {
@@ -41,6 +45,9 @@ const mutations = {
       description: ""
     };
     Object.assign(state.editedTodo, defaultTodo);
+  },
+  setDetailTodo(state, payload) {
+    state.detailTodo = payload;
   },
   showDialog(state) {
     state.dialog = true;
@@ -59,11 +66,17 @@ const actions = {
       commit("setList", res.data);
     });
   },
+  getDetailTodo({ commit }, payload) {
+    Vue.axios.get("http://localhost:4200/todo/" + payload).then(res => {
+      res.data.date = res.data.date.slice(0, 16).replace("T", " ");
+      commit("setDetailTodo", res.data);
+    });
+  },
   addTodo: ({ dispatch }, payload) => {
     const postData = {
       name: payload.name,
       status: payload.todoStatus,
-      description: "test description"
+      description: payload.description
     };
     Vue.axios.post("http://localhost:4200/todo", postData).then(res => {
       console.log(res);

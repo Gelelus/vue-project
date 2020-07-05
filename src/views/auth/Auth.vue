@@ -27,8 +27,6 @@
 
 <script>
 export default {
-  name: "HelloWorld",
-
   data: () => ({
     showPassword: false
   })

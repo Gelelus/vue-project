@@ -58,10 +58,10 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["showDialog", "closeDialog", "UnSetEditMode"]),
+    ...mapMutations(["showDialog", "closeDialog", "unSetEditMode"]),
     ...mapActions(["addTodo", "deleteTodo", "editTodo", "getTodoList"]),
     close() {
-      this.UnSetEditMode();
+      this.unSetEditMode();
     },
     save() {
       if (this.edited) {
