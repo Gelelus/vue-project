@@ -7,11 +7,18 @@
 
 <script>
 import header from "./views/app-header"
+import { mapActions } from "vuex";
 
 export default {
   components: {
     appHeader: header
   },
+  created() {
+    this.autoLogin();
+  },
+  methods: {
+    ...mapActions(["autoLogin"])
+  }
 };
 </script>
 
