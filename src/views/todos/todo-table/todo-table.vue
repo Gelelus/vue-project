@@ -59,9 +59,9 @@ export default {
   },
   methods: {
     ...mapActions(["deleteTodo", "editTodo", "getTodoList"]),
-    ...mapMutations(["setEditMode", "showDialog"]),
+    ...mapMutations(["editMode", "showDialog"]),
     editItem(item) {
-      this.setEditMode(item);
+      this.editMode(item);
     },
     newItem() {
       this.showDialog();

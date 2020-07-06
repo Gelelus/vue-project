@@ -13,38 +13,29 @@ const state = {
 };
 
 const getters = {
-  todos: state => {
-    return state.todos;
-  },
-  dialog: state => {
-    return state.dialog;
-  },
-  editedTodo: state => {
-    return state.editedTodo;
-  },
-  edited: state => {
-    return state.edited;
-  },
-  detailTodo: state => {
-    return state.detailTodo;
-  }
+  todos: state => state.todos,
+  dialog: state => state.dialog,
+  editedTodo: state => state.editedTodo,
+  edited: state => state.edited,
+  detailTodo: state => state.detailTodo
 };
 
 const mutations = {
-  setEditMode(state, payload) {
-    state.edited = true;
-    state.dialog = true;
-    Object.assign(state.editedTodo, payload);
-  },
-  unSetEditMode(state) {
-    state.edited = false;
-    state.dialog = false;
-    const defaultTodo = {
+  editMode(state, payload) {
+    let todo = {
       name: "",
       todoStatus: false,
       description: ""
     };
-    Object.assign(state.editedTodo, defaultTodo);
+    if (payload) {
+      todo = payload;
+      state.edited = true;
+      state.dialog = true;
+    } else {
+      state.edited = false;
+      state.dialog = false;
+    }
+    Object.assign(state.editedTodo, todo);
   },
   setDetailTodo(state, payload) {
     state.detailTodo = payload;
@@ -62,43 +53,74 @@ const mutations = {
 
 const actions = {
   getTodoList({ commit }) {
-    Vue.axios.get("http://localhost:4200/todo").then(res => {
-      commit("setList", res.data);
-    });
+    Vue.axios
+      .get("http://localhost:4200/todo")
+      .then(res => {
+        commit("setList", res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   },
   getDetailTodo({ commit }, payload) {
-    Vue.axios.get("http://localhost:4200/todo/" + payload).then(res => {
-      res.data.date = res.data.date.slice(0, 16).replace("T", " ");
-      commit("setDetailTodo", res.data);
-    });
+    Vue.axios
+      .get("http://localhost:4200/todo/" + payload)
+      .then(res => {
+        res.data.date = res.data.date.slice(0, 16).replace("T", " ");
+        commit("setDetailTodo", res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   },
   addTodo: ({ dispatch }, payload) => {
     const postData = {
       name: payload.name,
-      status: payload.todoStatus,
+      todoStatus: payload.todoStatus,
       description: payload.description
     };
-    Vue.axios.post("http://localhost:4200/todo", postData).then(res => {
-      console.log(res);
-      if (res.status !== 400) {
-        dispatch("getTodoList");
-      }
-    });
+    Vue.axios
+      .post("http://localhost:4200/todo", postData)
+      .then(res => {
+        console.log(res);
+        if (res.status !== 400) {
+          dispatch("getTodoList");
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   },
   deleteTodo: ({ dispatch }, payload) => {
-    Vue.axios.delete("http://localhost:4200/todo/" + payload).then(res => {
-      console.log(res);
-      if (res.status !== 400) {
-        dispatch("getTodoList");
-      }
-    });
+    Vue.axios
+      .delete("http://localhost:4200/todo/" + payload)
+      .then(res => {
+        console.log(res);
+        if (res.status !== 400) {
+          dispatch("getTodoList");
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   },
   editTodo: ({ dispatch }, payload) => {
-    Vue.axios.put("http://localhost:4200/todo/", payload).then(res => {
-      if (res.status !== 400) {
-        dispatch("getTodoList");
-      }
-    });
+    const putData = {
+      name: payload.name,
+      description: payload.description,
+      todoStatus: payload.todoStatus,
+      _id: payload._id
+    };
+    Vue.axios
+      .put("http://localhost:4200/todo/", putData)
+      .then(res => {
+        if (res.status !== 400) {
+          dispatch("getTodoList");
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 };
 
