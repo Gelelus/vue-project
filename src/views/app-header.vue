@@ -4,7 +4,15 @@
       <v-toolbar-title>Vue project</v-toolbar-title>
       <v-divider class="mx-4" inset vertical />
       <router-link to="/todos" v-if="user">
-        Todos
+        <v-toolbar-items>
+          Todos
+        </v-toolbar-items>
+      </router-link>
+      <v-divider class="mx-4" inset vertical />
+      <router-link to="/datepicker">
+        <v-toolbar-items>
+          DatePicker
+        </v-toolbar-items>
       </router-link>
       <v-spacer></v-spacer>
       <router-link to="/auth" v-if="!user">
@@ -30,3 +38,14 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+a {
+  font-weight: bold;
+  color: #2c3e50;
+
+  &.router-link-exact-active {
+    color: #42b983;
+  }
+}
+</style>
