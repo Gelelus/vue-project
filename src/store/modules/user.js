@@ -20,11 +20,14 @@ const getters = {
 const mutations = {
   logout(state) {
     state.user = null;
+    localStorage.setItem("UserData", null);
     router.push({ name: "Auth" });
   },
   authSuccess(state, payload) {
     state.user = payload;
-    router.push({ name: "Todos" });
+    if (!payload.redirect) {
+      router.push({ name: "Todos" });
+    }
   }
 };
 
@@ -44,6 +47,7 @@ const actions = {
   autoLogin({ commit }) {
     const userData = JSON.parse(localStorage.getItem("UserData"));
     if (userData && userData.token) {
+      userData.redirect = true;
       commit("authSuccess", userData);
     }
   }
