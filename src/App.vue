@@ -1,14 +1,26 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Todo</router-link> |
-      <router-link to="/auth">Auth</router-link>
-    </div>
-    <v-app>
-      <router-view />
-    </v-app>
-  </div>
+  <v-app id="app">
+    <app-header />
+    <router-view />
+  </v-app>
 </template>
+
+<script>
+import header from "./views/app-header"
+import { mapActions } from "vuex";
+
+export default {
+  components: {
+    appHeader: header
+  },
+  created() {
+    this.autoLogin();
+  },
+  methods: {
+    ...mapActions(["autoLogin"])
+  }
+};
+</script>
 
 <style lang="scss">
 #app {

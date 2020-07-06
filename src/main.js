@@ -6,7 +6,11 @@ import vuetify from "./plugins/vuetify";
 import axios from "axios";
 import VueAxios from "vue-axios";
 
+import interceptorsSetup from "./helpers/interceptor";
+
+interceptorsSetup();
 Vue.use(VueAxios, axios);
+
 Vue.config.productionTip = false;
 
 new Vue({
