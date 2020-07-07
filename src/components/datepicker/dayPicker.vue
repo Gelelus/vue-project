@@ -109,6 +109,7 @@ export default {
 
 <style lang="scss">
 .day-picker-container {
+   height: 300px;
   .day-picker-header {
     padding: 4px;
     align-items: center;

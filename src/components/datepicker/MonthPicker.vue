@@ -57,6 +57,7 @@ export default {
 
 <style lang="scss">
 .month-picker-container {
+  height: 300px;
   .month-picker-header {
     padding: 4px;
     align-items: center;
