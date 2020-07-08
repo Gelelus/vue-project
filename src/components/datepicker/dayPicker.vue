@@ -113,6 +113,9 @@ export default {
 
     this.year = this.dateObj.year;
   },
+  beforeDestroy: function() {
+    this.vueMode.payload = this.month;
+  },
   methods: {
     setMonthPicker() {
       this.vueMode.component = "MonthPicker";
