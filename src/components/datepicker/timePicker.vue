@@ -1,17 +1,20 @@
 <template>
   <div class="time-picker-container">
-    <v-list class="hour-picker">
-      <v-subheader>HH</v-subheader>
-      <v-list-item v-for="i in 24" :key="i" @click="setHour(i)">
+    <span class="timer-close" @click="vueMode.component = 'dayPicker'"
+      >close</span
+    >
+    <ul class="hour-picker">
+      <li>HH</li>
+      <li v-for="i in 24" :key="i" @click="setHour(i)">
         {{ prittyTime(i) }}
-      </v-list-item>
-    </v-list>
-    <v-list class="min-picker">
-      <v-subheader>mm</v-subheader>
-      <v-list-item v-for="i in 60" :key="i" @click="setMinute(i)">
+      </li>
+    </ul>
+    <ul class="min-picker">
+      <li>mm</li>
+      <li v-for="i in 60" :key="i" @click="setMinute(i)">
         {{ prittyTime(i) }}
-      </v-list-item>
-    </v-list>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -27,8 +30,8 @@ export default {
     vueMode: Object
   },
   created: function() {
-    this.hour = this.dateObj.time.h;
-    this.min = this.dateObj.time.m;
+    this.hour = this.dateObj.h;
+    this.min = this.dateObj.m;
   },
   computed: {
     data() {
@@ -44,11 +47,11 @@ export default {
   },
   methods: {
     setHour(hour) {
-      this.dateObj.time.h = this.prittyTime(hour);
+      this.dateObj.h = this.prittyTime(hour);
       this.$emit("change");
     },
     setMinute(minute) {
-      this.dateObj.time.m = this.prittyTime(minute);
+      this.dateObj.m = this.prittyTime(minute);
       this.$emit("change");
     },
     prittyTime(i) {
@@ -60,19 +63,35 @@ export default {
 
 <style lang="scss">
 .time-picker-container {
-  height: 300px;
+  position: relative;
+  height: 280px;
   display: flex;
   justify-content: space-between;
-  .v-list {
+  .timer-close {
+    transition: color 0.3s;
+    position: absolute;
+    right: 1.6em;
+    top: -1.4em;
+    color: white;
+    cursor: pointer;
+  }
+  .timer-close:hover {
+    color: rgb(219, 216, 216);
+  }
+  ul {
     width: 50%;
-    height: 300px;
     overflow: auto;
-    .v-subheader {
-      justify-content: center;
-    }
-    .v-list-item {
-      justify-content: center;
+    padding: 0;
+    li {
+      cursor: pointer;
+      padding: 0.5em;
+      list-style-type: none;
+      transition: background-color 0.3s;
+      text-align: center;
       font-weight: 500;
+    }
+    li:hover {
+      background-color: rgb(219, 216, 216);
     }
   }
 }
