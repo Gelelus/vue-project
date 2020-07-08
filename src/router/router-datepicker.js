@@ -2,5 +2,5 @@ export default {
   path: "/datepicker",
   name: "datepicker",
   component: () =>
-    import(/* webpackChunkName: "auth" */ "../components/datepicker")
+    import(/* webpackChunkName: "test" */ "../views/test/test.vue")
 };

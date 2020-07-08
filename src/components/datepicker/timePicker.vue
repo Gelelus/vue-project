@@ -45,9 +45,11 @@ export default {
   methods: {
     setHour(hour) {
       this.dateObj.time.h = this.prittyTime(hour);
+      this.$emit("change");
     },
     setMinute(minute) {
       this.dateObj.time.m = this.prittyTime(minute);
+      this.$emit("change");
     },
     prittyTime(i) {
       return i - 1 > 9 ? i - 1 : "0" + (i - 1);

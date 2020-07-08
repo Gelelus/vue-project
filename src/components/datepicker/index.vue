@@ -22,23 +22,30 @@
     </div>
     <dayPicker
       v-if="vueMode.component === 'dayPicker'"
+      @change="dateChange"
       :vueMode="vueMode"
       :dateObj="dateObj"
       :daysOfWeek="daysOfWeek"
       :monthOfYear="monthOfYear"
+      :firstDayOfWeek="firstDayOfWeek"
+      :headerDateFormat="headerDateFormat"
     />
     <MonthPicker
+      @change="dateChange"
       :vueMode="vueMode"
       :dateObj="dateObj"
       :monthOfYear="monthOfYear"
+      :headerDateFormat="headerDateFormat"
       v-if="vueMode.component === 'MonthPicker'"
     />
     <YearPicker
+      @change="dateChange"
       :dateObj="dateObj"
       :vueMode="vueMode"
       v-if="vueMode.component === 'YearPicker'"
     />
     <timePicker
+      @change="dateChange"
       :dateObj="dateObj"
       :vueMode="vueMode"
       v-if="vueMode.component === 'timePicker'"
@@ -76,7 +83,9 @@ export default {
       month: new Date().getMonth(),
       day: new Date().getDate(),
       dayOfWeek: new Date().getDay(),
-      time: { h: new Date().getHours(), m: new Date().getMinutes() }
+      time: { h: new Date().getHours(), m: new Date().getMinutes() },
+      maxDate: null,
+      minDate: null
     }
   }),
   components: {
@@ -88,7 +97,28 @@ export default {
   methods: {
     setPicker(picker) {
       this.vueMode.component = picker;
+    },
+    dateChange() {
+      const date = new Date(
+        this.dateObj.year,
+        this.dateObj.month,
+        this.dateObj.day,
+        this.dateObj.time.h,
+        this.dateObj.time.m
+      );
+      this.$emit("dateChange", date);
     }
+  },
+  created: function() {
+    const startDate = new Date(this.date);
+    this.dateObj.year = startDate.getFullYear();
+    this.dateObj.month = startDate.getMonth();
+    this.dateObj.day = startDate.getDate();
+    this.dateObj.dayOfWeek = startDate.getDay();
+    this.dateObj.time.h = startDate.getHours();
+    this.dateObj.time.m = startDate.getMinutes();
+    this.dateObj.maxDate = new Date(this.maxDate);
+    this.dateObj.minDate = new Date(this.minDate);
   },
   computed: {
     pickerClickTime: function() {
@@ -98,14 +128,17 @@ export default {
     }
   },
   props: {
-    firsDayOfWeek: { type: String, default: "San" },
-    HeaderDateFormat: { type: String, default: "first" },
-    maxDate: { type: Object, default: null },
-    minDate: { type: Object, default: null }
+    date: { type: [String, Date], default: new Date() },
+    firstDayOfWeek: { type: [String, Number], default: 0 },
+    headerDateFormat: { type: Function, default: null },
+    maxDate: { type: [String, Date], default: null },
+    minDate: { type: [String, Date], default: null }
+  },
+  model: {
+    prop: "date",
+    event: "dateChange"
   }
 };
-
-// 3. реализовать функционал: first-day-of-week, header-date-format, max-date, min-date
 </script>
 
 <style lang="scss">

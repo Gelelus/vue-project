@@ -34,19 +34,34 @@ export default {
   },
   computed: {
     data() {
-      let startYear = this.year - 100 > 0 ? this.year - 100 : 1;
-      const endYear = this.year + 100;
+      let startYear = this.minYear;
+      let endYear = this.maxYear;
       let data = [];
       for (let i = 0; startYear <= endYear; i++) {
         data[i] = startYear;
         startYear++;
       }
       return data;
+    },
+    maxYear() {
+      if (this.dateObj.maxDate) {
+        return this.dateObj.maxDate.getFullYear();
+      } else {
+        return this.year + 100;
+      }
+    },
+    minYear() {
+      if (this.dateObj.maxDate) {
+        return this.dateObj.minDate.getFullYear();
+      } else {
+        return this.year - 100 > 0 ? this.year - 100 : 1;
+      }
     }
   },
   methods: {
     setMonthPicker(year) {
       this.dateObj.year = year;
+      this.$emit("change");
       this.vueMode.component = "MonthPicker";
     }
   }
