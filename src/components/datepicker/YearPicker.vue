@@ -15,19 +15,6 @@ export default {
   data: () => ({
     year: 2020
   }),
-  props: {
-    dateObj: Object,
-    vueMode: Object
-  },
-  created: function() {
-    this.year = this.dateObj.year;
-  },
-  mounted: function() {
-    this.$refs.element[0].style = "font-size: 26px; color: #1867c0";
-    this.$refs.element[0].scrollIntoView({
-      block: "center"
-    });
-  },
   computed: {
     data() {
       let startYear = this.minYear;
@@ -54,12 +41,25 @@ export default {
       }
     }
   },
+  props: {
+    dateObj: Object,
+    vueMode: Object
+  },
   methods: {
     setMonthPicker(year) {
       this.dateObj.year = year;
       this.$emit("change");
       this.vueMode.component = "MonthPicker";
     }
+  },
+  created: function() {
+    this.year = this.dateObj.year;
+  },
+  mounted: function() {
+    this.$refs.element[0].style = "font-size: 26px; color: #1867c0";
+    this.$refs.element[0].scrollIntoView({
+      block: "center"
+    });
   }
 };
 </script>

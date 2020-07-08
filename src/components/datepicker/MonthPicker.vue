@@ -45,17 +45,6 @@ export default {
     vueMode: Object,
     monthOfYear: Array
   },
-  created: function() {
-    this.year = this.dateObj.year;
-    if (this.dateObj.maxDate) {
-      this.maxYear = this.dateObj.maxDate.getFullYear();
-      this.maxMonth = this.dateObj.maxDate.getMonth();
-    }
-    if (this.dateObj.minDate) {
-      this.minYear = this.dateObj.minDate.getFullYear();
-      this.minMonth = this.dateObj.minDate.getMonth();
-    }
-  },
   methods: {
     setDayPicker(month) {
       this.dateObj.year = this.year;
@@ -87,6 +76,17 @@ export default {
       } else {
         return false;
       }
+    }
+  },
+  created: function() {
+    this.year = this.dateObj.year;
+    if (this.dateObj.maxDate) {
+      this.maxYear = this.dateObj.maxDate.getFullYear();
+      this.maxMonth = this.dateObj.maxDate.getMonth();
+    }
+    if (this.dateObj.minDate) {
+      this.minYear = this.dateObj.minDate.getFullYear();
+      this.minMonth = this.dateObj.minDate.getMonth();
     }
   }
 };
