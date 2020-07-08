@@ -18,6 +18,6 @@ export default {
         import(
           /* webpackChunkName: "todos" */ "../views/todos/todo-detail/todo-detail.vue"
         )
-    },
+    }
   ]
 };
