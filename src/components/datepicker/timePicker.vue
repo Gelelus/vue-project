@@ -5,14 +5,20 @@
     >
     <ul class="hour-picker">
       <p>HH</p>
-      <li v-for="i in 24" :key="i" @click="setHour(i)">
-        {{ prittyTime(i) }}
+      <li v-for="i in 24" :key="i" @click="setHour(i - 1)">
+        {{ prittyTime(i - 1) }}
       </li>
     </ul>
     <ul class="min-picker">
       <p>mm</p>
-      <li v-for="i in 60" :key="i" @click="setMinute(i)">
-        {{ prittyTime(i) }}
+      <li v-for="i in 60" :key="i" @click="setMinute(i - 1)">
+        {{ prittyTime(i - 1) }}
+      </li>
+    </ul>
+    <ul class="sec-picker" v-if="displaySec">
+      <p>ss</p>
+      <li v-for="i in 60" :key="i" @click="setSecond(i - 1)">
+        {{ prittyTime(i - 1) }}
       </li>
     </ul>
   </div>
@@ -27,7 +33,8 @@ export default {
   }),
   props: {
     dateObj: Object,
-    vueMode: Object
+    vueMode: Object,
+    displaySec: Boolean
   },
   methods: {
     setHour(hour) {
@@ -36,6 +43,10 @@ export default {
     },
     setMinute(minute) {
       this.dateObj.m = this.prittyTime(minute);
+      this.$emit("change");
+    },
+    setSecond(sec) {
+      this.dateObj.s = this.prittyTime(sec);
       this.$emit("change");
     },
     prittyTime(i) {
@@ -58,7 +69,7 @@ export default {
   .timer-close {
     transition: color 0.3s;
     position: absolute;
-    right: 1.6em;
+    right: 1em;
     top: -1.4em;
     color: white;
     cursor: pointer;

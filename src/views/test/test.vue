@@ -5,6 +5,7 @@
       v-model="date"
       :first-day-of-week="firstDayOfWeek"
       :header-date-format="dateFormat"
+      :displaySec="false"
     />
   </div>
 </template>

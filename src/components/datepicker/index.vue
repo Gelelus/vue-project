@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="picker-display">
-      <DayPicker
+      <dayPicker
         v-if="vueMode.component === 'DayPicker'"
         @change="dateChange"
         :vueMode="vueMode"
@@ -48,6 +48,7 @@
         @change="dateChange"
         :dateObj="dateObj"
         :vueMode="vueMode"
+        :displaySec="displaySec"
         v-if="vueMode.component === 'TimePicker'"
       />
     </div>
@@ -86,6 +87,7 @@ export default {
       dayOfWeek: null,
       h: null,
       m: null,
+      s: null,
       maxDate: null,
       minDate: null
     },
@@ -99,11 +101,14 @@ export default {
         : "TimePicker";
     },
     prittyTime() {
-      return (
+      let prittyTime =
         ("0" + this.dateObj.h).slice(-2) +
         " : " +
-        ("0" + this.dateObj.m).slice(-2)
-      );
+        ("0" + this.dateObj.m).slice(-2);
+      if (this.displaySec) {
+        prittyTime += " : " + ("0" + this.dateObj.s).slice(-2);
+      }
+      return prittyTime;
     }
   },
   props: {
@@ -111,7 +116,8 @@ export default {
     firstDayOfWeek: { type: [String, Number], default: 0 },
     headerDateFormat: { type: String, default: null },
     maxDate: { type: [String, Date], default: null },
-    minDate: { type: [String, Date], default: null }
+    minDate: { type: [String, Date], default: null },
+    displaySec: { type: Boolean, default: false }
   },
   components: {
     DayPicker: DayPicker,
@@ -129,7 +135,8 @@ export default {
         this.dateObj.month,
         this.dateObj.day,
         this.dateObj.h,
-        this.dateObj.m
+        this.dateObj.m,
+        this.dateObj.s
       );
       this.outValue = date.toString();
       this.$emit("input", date);
@@ -145,6 +152,7 @@ export default {
       this.dateObj.dayOfWeek = startDate.getDay();
       this.dateObj.h = startDate.getHours();
       this.dateObj.m = startDate.getMinutes();
+      this.dateObj.s = startDate.getSeconds();
       if (this.maxDate) {
         this.dateObj.maxDate = new Date(this.maxDate);
       }
@@ -194,7 +202,7 @@ export default {
       .picker-time {
         transition: color 0.3s;
         cursor: pointer;
-        font-size: 20px;
+        font-size: 15px;
         font-weight: 500;
         line-height: 1;
       }
@@ -215,7 +223,7 @@ export default {
       }
     }
     .picker-head {
-      font-size: 34px;
+      font-size: 30px;
       font-weight: 500;
       line-height: 1;
       span {
