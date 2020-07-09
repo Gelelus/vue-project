@@ -2,67 +2,69 @@
   <div class="picker-container">
     <div class="picker-header">
       <div class="picker-year" @click="setPicker('YearPicker')">
-        {{ dateObj.year }}
+        <span>{{ dateObj.year }}</span>
       </div>
-
       <div class="picker-sub-container">
-        <div class="picker-month">
-          {{
-            daysOfWeek[dateObj.dayOfWeek] +
-              ", " +
-              monthOfYear[dateObj.month].slice(0, 3) +
-              " " +
-              dateObj.day
-          }}
+        <div class="picker-head">
+          <span @click="setPicker('DayPicker')">{{
+            monthOfYear[dateObj.month].slice(0, 3) + ", "
+          }}</span
+          ><span @click="setPicker('MonthPicker')"
+            >{{ daysOfWeek[dateObj.dayOfWeek] + " " }}{{ dateObj.day }}</span
+          >
         </div>
         <div class="picker-time" @click="setPicker(pickerClickTime)">
-          {{ dateObj.time.h + " : " + dateObj.time.m }}
+          {{ prittyTime }}
         </div>
       </div>
     </div>
-    <dayPicker
-      v-if="vueMode.component === 'dayPicker'"
-      @change="dateChange"
-      :vueMode="vueMode"
-      :dateObj="dateObj"
-      :daysOfWeek="daysOfWeek"
-      :monthOfYear="monthOfYear"
-      :firstDayOfWeek="firstDayOfWeek"
-      :headerDateFormat="headerDateFormat"
-    />
-    <MonthPicker
-      @change="dateChange"
-      :vueMode="vueMode"
-      :dateObj="dateObj"
-      :monthOfYear="monthOfYear"
-      :headerDateFormat="headerDateFormat"
-      v-if="vueMode.component === 'MonthPicker'"
-    />
-    <YearPicker
-      @change="dateChange"
-      :dateObj="dateObj"
-      :vueMode="vueMode"
-      v-if="vueMode.component === 'YearPicker'"
-    />
-    <timePicker
-      @change="dateChange"
-      :dateObj="dateObj"
-      :vueMode="vueMode"
-      v-if="vueMode.component === 'timePicker'"
-    />
+    <div class="picker-display">
+      <dayPicker
+        v-if="vueMode.component === 'DayPicker'"
+        @change="dateChange"
+        :vueMode="vueMode"
+        :dateObj="dateObj"
+        :daysOfWeek="daysOfWeek"
+        :monthOfYear="monthOfYear"
+        :firstDayOfWeek="firstDayOfWeek"
+        :headerDateFormat="headerDateFormat"
+        :outUpdate="outUpdate"
+      />
+      <MonthPicker
+        :vueMode="vueMode"
+        :dateObj="dateObj"
+        :monthOfYear="monthOfYear"
+        :headerDateFormat="headerDateFormat"
+        :outUpdate="outUpdate"
+        v-if="vueMode.component === 'MonthPicker'"
+      />
+      <YearPicker
+        :dateObj="dateObj"
+        :vueMode="vueMode"
+        :outUpdate="outUpdate"
+        v-if="vueMode.component === 'YearPicker'"
+      />
+      <TimePicker
+        @change="dateChange"
+        :dateObj="dateObj"
+        :vueMode="vueMode"
+        :displaySec="displaySec"
+        v-if="vueMode.component === 'TimePicker'"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-import dayPicker from "./dayPicker";
-import timePicker from "./timePicker";
+import DayPicker from "./DayPicker";
+import TimePicker from "./TimePicker";
 import YearPicker from "./YearPicker";
 import MonthPicker from "./MonthPicker";
 
 export default {
   name: "date-picker",
   data: () => ({
-    vueMode: { component: "dayPicker", payload: false },
+    vueMode: { component: "DayPicker", payload: false },
     daysOfWeek: ["San", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     monthOfYear: [
       "January",
@@ -79,18 +81,47 @@ export default {
       "December"
     ],
     dateObj: {
-      year: new Date().getFullYear(),
-      month: new Date().getMonth(),
-      day: new Date().getDate(),
-      dayOfWeek: new Date().getDay(),
-      time: { h: new Date().getHours(), m: new Date().getMinutes() },
+      year: null,
+      month: null,
+      day: null,
+      dayOfWeek: null,
+      h: null,
+      m: null,
+      s: null,
       maxDate: null,
       minDate: null
-    }
+    },
+    outUpdate: false,
+    outValue: null
   }),
+  computed: {
+    pickerClickTime: function() {
+      return this.vueMode.component === "TimePicker"
+        ? "DayPicker"
+        : "TimePicker";
+    },
+    prittyTime() {
+      let prittyTime =
+        ("0" + this.dateObj.h).slice(-2) +
+        " : " +
+        ("0" + this.dateObj.m).slice(-2);
+      if (this.displaySec) {
+        prittyTime += " : " + ("0" + this.dateObj.s).slice(-2);
+      }
+      return prittyTime;
+    }
+  },
+  props: {
+    value: { type: [String, Date], default: "" },
+    firstDayOfWeek: { type: [String, Number], default: 0 },
+    headerDateFormat: { type: String, default: null },
+    maxDate: { type: [String, Date], default: null },
+    minDate: { type: [String, Date], default: null },
+    displaySec: { type: Boolean, default: false }
+  },
   components: {
-    dayPicker: dayPicker,
-    timePicker: timePicker,
+    DayPicker: DayPicker,
+    TimePicker: TimePicker,
     YearPicker: YearPicker,
     MonthPicker: MonthPicker
   },
@@ -103,40 +134,44 @@ export default {
         this.dateObj.year,
         this.dateObj.month,
         this.dateObj.day,
-        this.dateObj.time.h,
-        this.dateObj.time.m
+        this.dateObj.h,
+        this.dateObj.m,
+        this.dateObj.s
       );
-      this.$emit("dateChange", date);
+      this.outValue = date.toString();
+      this.$emit("input", date);
+    },
+    initilaze(startDate) {
+      const dateString = startDate.toString();
+      if (dateString === "Invalid Date" || dateString === this.outValue) {
+        return;
+      }
+      this.dateObj.year = startDate.getFullYear();
+      this.dateObj.month = startDate.getMonth();
+      this.dateObj.day = startDate.getDate();
+      this.dateObj.dayOfWeek = startDate.getDay();
+      this.dateObj.h = startDate.getHours();
+      this.dateObj.m = startDate.getMinutes();
+      this.dateObj.s = startDate.getSeconds();
+      if (this.maxDate) {
+        this.dateObj.maxDate = new Date(this.maxDate);
+      }
+      if (this.minDate) {
+        this.dateObj.minDate = new Date(this.minDate);
+      }
+    }
+  },
+  watch: {
+    value: function() {
+      const startDate = new Date(this.value);
+      if (startDate.toString() !== this.outValue) {
+        this.outUpdate = !this.outUpdate;
+      }
+      this.initilaze(startDate);
     }
   },
   created: function() {
-    const startDate = new Date(this.date);
-    this.dateObj.year = startDate.getFullYear();
-    this.dateObj.month = startDate.getMonth();
-    this.dateObj.day = startDate.getDate();
-    this.dateObj.dayOfWeek = startDate.getDay();
-    this.dateObj.time.h = startDate.getHours();
-    this.dateObj.time.m = startDate.getMinutes();
-    this.dateObj.maxDate = new Date(this.maxDate);
-    this.dateObj.minDate = new Date(this.minDate);
-  },
-  computed: {
-    pickerClickTime: function() {
-      return this.vueMode.component === "timePicker"
-        ? "dayPicker"
-        : "timePicker";
-    }
-  },
-  props: {
-    date: { type: [String, Date], default: new Date() },
-    firstDayOfWeek: { type: [String, Number], default: 0 },
-    headerDateFormat: { type: Function, default: null },
-    maxDate: { type: [String, Date], default: null },
-    minDate: { type: [String, Date], default: null }
-  },
-  model: {
-    prop: "date",
-    event: "dateChange"
+    this.initilaze(new Date(this.value));
   }
 };
 </script>
@@ -146,6 +181,14 @@ export default {
   margin: 1rem auto 1rem auto;
   width: 300px;
   text-align: left;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+  .picker-display {
+    border: 1px solid #1867c0;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
   .picker-header {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
@@ -157,10 +200,14 @@ export default {
       justify-content: space-between;
       align-items: baseline;
       .picker-time {
+        transition: color 0.3s;
         cursor: pointer;
-        font-size: 20px;
+        font-size: 15px;
         font-weight: 500;
         line-height: 1;
+      }
+      .picker-time:hover {
+        color: #9aa0a7;
       }
     }
     .picker-year {
@@ -168,12 +215,24 @@ export default {
       font-size: 14px;
       font-weight: 500;
       margin-bottom: 8px;
+      span {
+        transition: color 0.3s;
+      }
+      span:hover {
+        color: #9aa0a7;
+      }
     }
-
-    .picker-month {
-      font-size: 34px;
+    .picker-head {
+      font-size: 30px;
       font-weight: 500;
       line-height: 1;
+      span {
+        transition: color 0.3s;
+        cursor: pointer;
+      }
+      span:hover {
+        color: #9aa0a7;
+      }
     }
   }
 }

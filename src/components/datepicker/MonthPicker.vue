@@ -1,24 +1,27 @@
 <template>
   <div class="month-picker-container">
     <div class="month-picker-header">
-      <v-icon class="mr-2" @click="nextYear(0)">mdi-chevron-left</v-icon>
-      <v-btn text @click="setYearPicker()">{{
-        headerDateFormat ? headerDateFormat(year) : year
-      }}</v-btn>
-      <v-icon class="mr-2" @click="nextYear(1)">mdi-chevron-right</v-icon>
+      <span @click="nextYear(0)" class="chevron-container"
+        ><i class="chevron chevron-left"></i
+      ></span>
+      <button @click="setYearPicker()">
+        {{ year }}
+      </button>
+      <span @click="nextYear(1)" class="chevron-container"
+        ><i class="chevron chevron-right"></i
+      ></span>
     </div>
     <div class="month-picker-table">
       <table>
         <tbody>
           <tr v-for="i in 4" :key="i">
             <td v-for="j in 3" :key="j">
-              <v-btn
-                text
+              <button
                 @click="setDayPicker(j + 3 * i - 4)"
                 :disabled="disable(j + 3 * i - 4)"
               >
                 {{ monthOfYear[j + 3 * i - 4].slice(0, 3) }}
-              </v-btn>
+              </button>
             </td>
           </tr>
         </tbody>
@@ -34,32 +37,19 @@ export default {
     year: 2020,
     maxYear: Infinity,
     maxMonth: 11,
-    minYear: 2000,
+    minYear: 1,
     minMonth: 0
   }),
   props: {
     dateObj: Object,
     vueMode: Object,
-    monthOfYear: Array,
-    headerDateFormat: { type: Function, default: null }
-  },
-  created: function() {
-    this.year = this.dateObj.year;
-    if (this.dateObj.maxDate) {
-      this.maxYear = this.dateObj.maxDate.getFullYear();
-      this.maxMonth = this.dateObj.maxDate.getMonth();
-    }
-    if (this.dateObj.minDate) {
-      this.minYear = this.dateObj.minDate.getFullYear();
-      this.minMonth = this.dateObj.minDate.getMonth();
-    }
+    monthOfYear: Array
   },
   methods: {
     setDayPicker(month) {
       this.dateObj.year = this.year;
       this.vueMode.payload = month;
-      this.vueMode.component = "dayPicker";
-      this.$emit("change");
+      this.vueMode.component = "DayPicker";
     },
     setYearPicker() {
       this.vueMode.component = "YearPicker";
@@ -86,18 +76,71 @@ export default {
         return false;
       }
     }
+  },
+  created: function() {
+    this.year = this.dateObj.year;
+    if (this.dateObj.maxDate) {
+      this.maxYear = this.dateObj.maxDate.getFullYear();
+      this.maxMonth = this.dateObj.maxDate.getMonth();
+    }
+    if (this.dateObj.minDate) {
+      this.minYear = this.dateObj.minDate.getFullYear();
+      this.minMonth = this.dateObj.minDate.getMonth();
+    }
   }
 };
 </script>
 
 <style lang="scss">
 .month-picker-container {
-  height: 300px;
+  height: 280px;
   .month-picker-header {
     padding: 4px;
     align-items: center;
     display: flex;
     justify-content: space-between;
+    button {
+      transition: background-color 0.3s;
+      padding: 0.4em 2em 0.4em 2em;
+      border-radius: 5px;
+      outline: none;
+    }
+    button:hover {
+      background-color: rgb(219, 216, 216);
+    }
+    .chevron-container:hover {
+      border-radius: 10px;
+      background-color: rgb(219, 216, 216);
+    }
+    .chevron-container {
+      padding: 0.2em 0.4em 0 0.2em;
+      cursor: pointer;
+      .chevron {
+        display: inline-block;
+        height: 0.8em;
+        position: relative;
+        width: 0.6em;
+        margin: 0em 0.5em 0em 0.5em;
+      }
+      .chevron:before {
+        display: block;
+        content: "";
+        width: 0;
+        height: 0em;
+        border-style: solid;
+        position: absolute;
+      }
+      .chevron-right:before {
+        right: 0;
+        border-width: 0.4em 0 0.4em 0.4em;
+        border-color: transparent transparent transparent gray;
+      }
+      .chevron-left:before {
+        right: 0;
+        border-width: 0.4em 0.4em 0.4em 0;
+        border-color: transparent gray transparent transparent;
+      }
+    }
   }
   .month-picker-table {
     table {
@@ -112,10 +155,21 @@ export default {
       }
       th,
       td {
-        .v-btn {
-          height: 32px;
-          width: 32px;
+        button {
+          outline: none;
+          transition: background-color 0.3s;
+          height: 52px;
+          width: 90px;
           color: black;
+          font-size: 1.4em;
+          color: rgb(78, 78, 78);
+          border-radius: 10px;
+        }
+        button:hover {
+          background-color: rgb(219, 216, 216);
+        }
+        button:disabled {
+          color: rgb(165, 163, 163);
         }
       }
     }

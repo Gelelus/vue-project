@@ -1,12 +1,11 @@
 <template>
   <div>
-    {{ date }}
-
+    <input v-model="date" placeholder="отредактируй меня" style="width: 60%" />
     <app-datepicker
       v-model="date"
       :first-day-of-week="firstDayOfWeek"
-      :max-date="maxDate"
-      :min-date="minDate"
+      :header-date-format="dateFormat"
+      :displaySec="false"
     />
   </div>
 </template>
@@ -20,13 +19,9 @@ export default {
     date: new Date(),
     maxDate: new Date(2040, 1, 10),
     minDate: new Date(2000, 3, 12),
-    firstDayOfWeek: "1"
+    firstDayOfWeek: "1",
+    dateFormat: "xxx-ddd-ddd"
   }),
-  methods: {
-    dateFormat(date) {
-      return date;
-    }
-  },
   components: {
     appDatepicker: datepicker
   }

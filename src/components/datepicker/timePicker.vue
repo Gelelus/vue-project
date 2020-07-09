@@ -1,17 +1,26 @@
 <template>
   <div class="time-picker-container">
-    <v-list class="hour-picker">
-      <v-subheader>HH</v-subheader>
-      <v-list-item v-for="i in 24" :key="i" @click="setHour(i)">
-        {{ prittyTime(i) }}
-      </v-list-item>
-    </v-list>
-    <v-list class="min-picker">
-      <v-subheader>mm</v-subheader>
-      <v-list-item v-for="i in 60" :key="i" @click="setMinute(i)">
-        {{ prittyTime(i) }}
-      </v-list-item>
-    </v-list>
+    <span class="timer-close" @click="vueMode.component = 'DayPicker'"
+      >close</span
+    >
+    <ul class="hour-picker">
+      <p>HH</p>
+      <li v-for="i in 24" :key="i" @click="setHour(i - 1)">
+        {{ prittyTime(i - 1) }}
+      </li>
+    </ul>
+    <ul class="min-picker">
+      <p>mm</p>
+      <li v-for="i in 60" :key="i" @click="setMinute(i - 1)">
+        {{ prittyTime(i - 1) }}
+      </li>
+    </ul>
+    <ul class="sec-picker" v-if="displaySec">
+      <p>ss</p>
+      <li v-for="i in 60" :key="i" @click="setSecond(i - 1)">
+        {{ prittyTime(i - 1) }}
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -24,55 +33,74 @@ export default {
   }),
   props: {
     dateObj: Object,
-    vueMode: Object
-  },
-  created: function() {
-    this.hour = this.dateObj.time.h;
-    this.min = this.dateObj.time.m;
-  },
-  computed: {
-    data() {
-      let startYear = this.year - 100 > 0 ? this.year - 100 : 1;
-      const endYear = this.year + 100;
-      let data = [];
-      for (let i = 0; startYear <= endYear; i++) {
-        data[i] = startYear;
-        startYear++;
-      }
-      return data;
-    }
+    vueMode: Object,
+    displaySec: Boolean
   },
   methods: {
     setHour(hour) {
-      this.dateObj.time.h = this.prittyTime(hour);
+      this.dateObj.h = this.prittyTime(hour);
       this.$emit("change");
     },
     setMinute(minute) {
-      this.dateObj.time.m = this.prittyTime(minute);
+      this.dateObj.m = this.prittyTime(minute);
+      this.$emit("change");
+    },
+    setSecond(sec) {
+      this.dateObj.s = this.prittyTime(sec);
       this.$emit("change");
     },
     prittyTime(i) {
-      return i - 1 > 9 ? i - 1 : "0" + (i - 1);
+      return ("0" + i).slice(-2);
     }
+  },
+  created: function() {
+    this.hour = this.dateObj.h;
+    this.min = this.dateObj.m;
   }
 };
 </script>
 
 <style lang="scss">
 .time-picker-container {
-  height: 300px;
+  position: relative;
+  height: 280px;
   display: flex;
   justify-content: space-between;
-  .v-list {
+  .timer-close {
+    transition: color 0.3s;
+    position: absolute;
+    right: 1em;
+    top: -1.4em;
+    color: white;
+    cursor: pointer;
+  }
+  .timer-close:hover {
+    color: rgb(219, 216, 216);
+  }
+  ul {
+    position: relative;
     width: 50%;
-    height: 300px;
     overflow: auto;
-    .v-subheader {
-      justify-content: center;
-    }
-    .v-list-item {
-      justify-content: center;
+    padding: 0;
+    p {
+      position: sticky;
+      background-color: white;
+      top: 0;
+      text-align: center;
       font-weight: 500;
+      padding: 0.5em;
+      margin: 0;
+    }
+    li {
+      cursor: pointer;
+      padding: 0.5em;
+      list-style-type: none;
+      transition: background-color 0.3s;
+      text-align: center;
+      font-weight: 500;
+    }
+    li:hover {
+      background-color: rgb(219, 216, 216);
     }
   }
 }
