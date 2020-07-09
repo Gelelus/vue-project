@@ -34,7 +34,7 @@ export default {
       }
     },
     minYear() {
-      if (this.dateObj.maxDate) {
+      if (this.dateObj.minDate) {
         return this.dateObj.minDate.getFullYear();
       } else {
         return this.year - 100 > 0 ? this.year - 100 : 1;
@@ -48,7 +48,6 @@ export default {
   methods: {
     setMonthPicker(year) {
       this.dateObj.year = year;
-      this.$emit("change");
       this.vueMode.component = "MonthPicker";
     }
   },

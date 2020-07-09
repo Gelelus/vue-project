@@ -28,9 +28,9 @@
         :monthOfYear="monthOfYear"
         :firstDayOfWeek="firstDayOfWeek"
         :headerDateFormat="headerDateFormat"
+        :outUpdate="outUpdate"
       />
       <MonthPicker
-        @change="dateChange"
         :vueMode="vueMode"
         :dateObj="dateObj"
         :monthOfYear="monthOfYear"
@@ -38,7 +38,6 @@
         v-if="vueMode.component === 'MonthPicker'"
       />
       <YearPicker
-        @change="dateChange"
         :dateObj="dateObj"
         :vueMode="vueMode"
         v-if="vueMode.component === 'YearPicker'"
@@ -88,7 +87,8 @@ export default {
       maxDate: null,
       minDate: null
     },
-    outUpdate: false
+    outUpdate: false,
+    outValue: null
   }),
   computed: {
     pickerClickTime: function() {
@@ -107,7 +107,7 @@ export default {
   props: {
     value: { type: [String, Date], default: "" },
     firstDayOfWeek: { type: [String, Number], default: 0 },
-    headerDateFormat: { type: Function, default: null },
+    headerDateFormat: { type: String, default: null },
     maxDate: { type: [String, Date], default: null },
     minDate: { type: [String, Date], default: null }
   },
@@ -129,11 +129,12 @@ export default {
         this.dateObj.h,
         this.dateObj.m
       );
+      this.outValue = date.toString();
       this.$emit("input", date);
     },
-    initilaze() {
-      const startDate = new Date(this.value);
-      if (startDate.toString() === "Invalid Date") {
+    initilaze(startDate) {
+      const dateString = startDate.toString();
+      if (dateString === "Invalid Date" || dateString === this.outValue) {
         return;
       }
       this.dateObj.year = startDate.getFullYear();
@@ -142,17 +143,25 @@ export default {
       this.dateObj.dayOfWeek = startDate.getDay();
       this.dateObj.h = startDate.getHours();
       this.dateObj.m = startDate.getMinutes();
-      this.dateObj.maxDate = new Date(this.maxDate);
-      this.dateObj.minDate = new Date(this.minDate);
+      if (this.maxDate) {
+        this.dateObj.maxDate = new Date(this.maxDate);
+      }
+      if (this.minDate) {
+        this.dateObj.minDate = new Date(this.minDate);
+      }
     }
   },
   watch: {
     value: function() {
-      this.initilaze();
+      const startDate = new Date(this.value);
+      if (startDate.toString() !== this.outValue) {
+        this.outUpdate = !this.outUpdate;
+      }
+      this.initilaze(startDate);
     }
   },
   created: function() {
-    this.initilaze();
+    this.initilaze(new Date(this.value));
   }
 };
 </script>

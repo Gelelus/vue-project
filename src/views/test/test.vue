@@ -1,12 +1,7 @@
 <template>
   <div>
     <input v-model="date" placeholder="отредактируй меня" style="width: 60%" />
-    <app-datepicker
-      v-model="date"
-      :first-day-of-week="firstDayOfWeek"
-      :max-date="maxDate"
-      :min-date="minDate"
-    />
+    <app-datepicker v-model="date" :first-day-of-week="firstDayOfWeek" />
   </div>
 </template>
 

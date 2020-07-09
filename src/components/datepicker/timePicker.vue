@@ -4,13 +4,13 @@
       >close</span
     >
     <ul class="hour-picker">
-      <li>HH</li>
+      <p>HH</p>
       <li v-for="i in 24" :key="i" @click="setHour(i)">
         {{ prittyTime(i) }}
       </li>
     </ul>
     <ul class="min-picker">
-      <li>mm</li>
+      <p>mm</p>
       <li v-for="i in 60" :key="i" @click="setMinute(i)">
         {{ prittyTime(i) }}
       </li>
@@ -67,9 +67,19 @@ export default {
     color: rgb(219, 216, 216);
   }
   ul {
+    position: relative;
     width: 50%;
     overflow: auto;
     padding: 0;
+    p {
+      position: sticky;
+      background-color: white;
+      top: 0;
+      text-align: center;
+      font-weight: 500;
+      padding: 0.5em;
+      margin: 0;
+    }
     li {
       cursor: pointer;
       padding: 0.5em;

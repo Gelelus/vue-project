@@ -93,7 +93,8 @@ export default {
     monthOfYear: Array,
     daysOfWeek: Array,
     vueMode: Object,
-    firstDayOfWeek: { type: [String, Number], default: 0 }
+    firstDayOfWeek: { type: [String, Number], default: 0 },
+    outUpdate: Boolean
   },
   methods: {
     initilaze() {
@@ -173,6 +174,11 @@ export default {
         this.year === this.dateObj.year &&
         this.month === this.dateObj.month
       );
+    }
+  },
+  watch: {
+    outUpdate() {
+      this.initilaze();
     }
   },
   created: function() {

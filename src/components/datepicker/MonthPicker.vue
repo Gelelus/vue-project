@@ -50,7 +50,6 @@ export default {
       this.dateObj.year = this.year;
       this.vueMode.payload = month;
       this.vueMode.component = "dayPicker";
-      this.$emit("change");
     },
     setYearPicker() {
       this.vueMode.component = "YearPicker";
