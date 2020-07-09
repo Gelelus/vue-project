@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="picker-display">
-      <dayPicker
+      <DayPicker
         v-if="vueMode.component === 'DayPicker'"
         @change="dateChange"
         :vueMode="vueMode"
@@ -44,7 +44,7 @@
         :outUpdate="outUpdate"
         v-if="vueMode.component === 'YearPicker'"
       />
-      <timePicker
+      <TimePicker
         @change="dateChange"
         :dateObj="dateObj"
         :vueMode="vueMode"
@@ -55,8 +55,8 @@
 </template>
 
 <script>
-import DayPicker from "./dayPicker";
-import TimePicker from "./timePicker";
+import DayPicker from "./DayPicker";
+import TimePicker from "./TimePicker";
 import YearPicker from "./YearPicker";
 import MonthPicker from "./MonthPicker";
 
@@ -114,8 +114,8 @@ export default {
     minDate: { type: [String, Date], default: null }
   },
   components: {
-    dayPicker: DayPicker,
-    timePicker: TimePicker,
+    DayPicker: DayPicker,
+    TimePicker: TimePicker,
     YearPicker: YearPicker,
     MonthPicker: MonthPicker
   },
