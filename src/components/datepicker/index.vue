@@ -6,7 +6,7 @@
       </div>
       <div class="picker-sub-container">
         <div class="picker-head">
-          <span @click="setPicker('dayPicker')">{{
+          <span @click="setPicker('DayPicker')">{{
             monthOfYear[dateObj.month].slice(0, 3) + ", "
           }}</span
           ><span @click="setPicker('MonthPicker')"
@@ -20,7 +20,7 @@
     </div>
     <div class="picker-display">
       <dayPicker
-        v-if="vueMode.component === 'dayPicker'"
+        v-if="vueMode.component === 'DayPicker'"
         @change="dateChange"
         :vueMode="vueMode"
         :dateObj="dateObj"
@@ -48,22 +48,22 @@
         @change="dateChange"
         :dateObj="dateObj"
         :vueMode="vueMode"
-        v-if="vueMode.component === 'timePicker'"
+        v-if="vueMode.component === 'TimePicker'"
       />
     </div>
   </div>
 </template>
 
 <script>
-import dayPicker from "./dayPicker";
-import timePicker from "./timePicker";
+import DayPicker from "./dayPicker";
+import TimePicker from "./timePicker";
 import YearPicker from "./YearPicker";
 import MonthPicker from "./MonthPicker";
 
 export default {
   name: "date-picker",
   data: () => ({
-    vueMode: { component: "dayPicker", payload: false },
+    vueMode: { component: "DayPicker", payload: false },
     daysOfWeek: ["San", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     monthOfYear: [
       "January",
@@ -94,9 +94,9 @@ export default {
   }),
   computed: {
     pickerClickTime: function() {
-      return this.vueMode.component === "timePicker"
-        ? "dayPicker"
-        : "timePicker";
+      return this.vueMode.component === "TimePicker"
+        ? "DayPicker"
+        : "TimePicker";
     },
     prittyTime() {
       return (
@@ -114,8 +114,8 @@ export default {
     minDate: { type: [String, Date], default: null }
   },
   components: {
-    dayPicker: dayPicker,
-    timePicker: timePicker,
+    dayPicker: DayPicker,
+    timePicker: TimePicker,
     YearPicker: YearPicker,
     MonthPicker: MonthPicker
   },
@@ -163,7 +163,6 @@ export default {
     }
   },
   created: function() {
-    console.log(this.headerDateFormat);
     this.initilaze(new Date(this.value));
   }
 };

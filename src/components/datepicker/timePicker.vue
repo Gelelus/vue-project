@@ -1,6 +1,6 @@
 <template>
   <div class="time-picker-container">
-    <span class="timer-close" @click="vueMode.component = 'dayPicker'"
+    <span class="timer-close" @click="vueMode.component = 'DayPicker'"
       >close</span
     >
     <ul class="hour-picker">

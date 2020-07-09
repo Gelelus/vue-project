@@ -49,7 +49,7 @@ export default {
     setDayPicker(month) {
       this.dateObj.year = this.year;
       this.vueMode.payload = month;
-      this.vueMode.component = "dayPicker";
+      this.vueMode.component = "DayPicker";
     },
     setYearPicker() {
       this.vueMode.component = "YearPicker";
