@@ -35,11 +35,13 @@
         :dateObj="dateObj"
         :monthOfYear="monthOfYear"
         :headerDateFormat="headerDateFormat"
+        :outUpdate="outUpdate"
         v-if="vueMode.component === 'MonthPicker'"
       />
       <YearPicker
         :dateObj="dateObj"
         :vueMode="vueMode"
+        :outUpdate="outUpdate"
         v-if="vueMode.component === 'YearPicker'"
       />
       <timePicker
@@ -161,6 +163,7 @@ export default {
     }
   },
   created: function() {
+    console.log(this.headerDateFormat);
     this.initilaze(new Date(this.value));
   }
 };

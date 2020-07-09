@@ -2,12 +2,14 @@
   <v-card color="grey lighten-4" flat tile>
     <v-toolbar dense>
       <v-toolbar-title>Vue project</v-toolbar-title>
-      <v-divider class="mx-4" inset vertical />
-      <router-link to="/todos" v-if="user">
-        <v-toolbar-items>
-          Todos
-        </v-toolbar-items>
-      </router-link>
+      <template v-if="user">
+        <v-divider class="mx-4" inset vertical />
+        <router-link to="/todos">
+          <v-toolbar-items>
+            Todos
+          </v-toolbar-items>
+        </router-link>
+      </template>
       <v-divider class="mx-4" inset vertical />
       <router-link to="/datepicker">
         <v-toolbar-items>
@@ -43,9 +45,9 @@ export default {
 a {
   font-weight: bold;
   color: #2c3e50;
-
-  &.router-link-exact-active {
-    color: #42b983;
-  }
+  text-decoration: none;
+}
+.router-link-exact-active {
+  color: #42b983 !important;
 }
 </style>
