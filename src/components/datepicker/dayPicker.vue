@@ -151,15 +151,20 @@ export default {
     setMonthPicker() {
       this.vueMode.component = "MonthPicker";
     },
-    setDate(day, month) {
+    setDate(day, addMonth) {
+      let month = this.month + addMonth;
+      let year = this.year;
+      if (month === 12) {
+        year++;
+        month = 0;
+      } else if (month === -1) {
+        year--;
+        month = 11;
+      }
       this.day = day;
-      this.dateObj.dayOfWeek = new Date(
-        this.year,
-        this.month + month,
-        day
-      ).getDay();
-      this.dateObj.year = this.year;
-      this.dateObj.month = this.month + month;
+      this.dateObj.dayOfWeek = new Date(year, month, day).getDay();
+      this.dateObj.year = year;
+      this.dateObj.month = month;
       this.dateObj.day = day;
       this.$emit("change");
     },
@@ -205,7 +210,7 @@ export default {
     },
     chosen(day, addMonth) {
       let month = this.month + addMonth;
-      let year = this.dateObj.year;
+      let year = this.year;
       if (month === 12) {
         year++;
         month = 0;
@@ -214,7 +219,9 @@ export default {
         month = 11;
       }
       return (
-        day === this.dateObj.day && this.year === year && this.dateObj.month === month
+        day === this.dateObj.day &&
+        this.dateObj.year === year &&
+        this.dateObj.month === month
       );
     }
   },
