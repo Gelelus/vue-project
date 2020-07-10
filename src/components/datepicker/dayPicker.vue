@@ -1,7 +1,7 @@
 <template>
   <div class="day-picker-container">
     <div class="day-picker-header">
-      <span @click="nextMonth(0)" class="chevron-container"
+      <span @click="nextMonth(-1)" class="chevron-container"
         ><i class="chevron chevron-left"></i
       ></span>
       <button @click="setMonthPicker">
@@ -22,14 +22,16 @@
         </thead>
         <tbody>
           <tr v-for="(week, index) in dataOfMonth" :key="index">
-            <td v-for="(day, index) in week" :key="index">
+            <td v-for="(dayData, index) in week" :key="index">
               <button
-                v-if="day"
-                @click="setDate(day, $event)"
-                :disabled="disable(day)"
-                :class="{ chosen: chosen(day) }"
+                @click="setDate(dayData.day, dayData.month)"
+                :disabled="dayData.disable"
+                :class="{
+                  chosen: dayData.chosen,
+                  out: dayData.out
+                }"
               >
-                {{ day }}
+                {{ dayData.day }}
               </button>
             </td>
           </tr>
@@ -69,19 +71,48 @@ export default {
           this.firstDayOfWeek +
           7) %
         7;
+      let startDayPreviousMonth = new Date(
+        this.year,
+        this.month,
+        -firstDay + 1
+      ).getDate();
+      let startDay = 1;
+      let startDayNextMonth = 1;
       let start = false;
       let data = [[], [], [], [], [], []];
-      let startDay = 1;
       for (let i = 0; i < 6; i++) {
         for (let j = 0; j < 7; j++) {
           if ((j === firstDay || start) && startDay <= daysInMonth) {
             if (!start) {
               start = true;
             }
-            data[i][j] = startDay;
+            data[i][j] = {
+              day: startDay,
+              disable: this.disable(startDay),
+              chosen: this.chosen(startDay, 0),
+              month: 0
+            };
             startDay++;
           } else {
-            data[i][j] = 0;
+            if (startDay > daysInMonth) {
+              data[i][j] = {
+                day: startDayNextMonth,
+                disable: this.disable(null, 1),
+                chosen: this.chosen(startDayNextMonth, 1),
+                out: true,
+                month: 1
+              };
+              startDayNextMonth++;
+            } else {
+              data[i][j] = {
+                day: startDayPreviousMonth,
+                chosen: this.chosen(startDayPreviousMonth, -1),
+                disable: this.disable(null, -1),
+                out: true,
+                month: -1
+              };
+              startDayPreviousMonth++;
+            }
           }
         }
       }
@@ -120,16 +151,20 @@ export default {
     setMonthPicker() {
       this.vueMode.component = "MonthPicker";
     },
-    setDate(day) {
+    setDate(day, month) {
       this.day = day;
-      this.dateObj.dayOfWeek = new Date(this.year, this.month, day).getDay();
+      this.dateObj.dayOfWeek = new Date(
+        this.year,
+        this.month + month,
+        day
+      ).getDay();
       this.dateObj.year = this.year;
-      this.dateObj.month = this.month;
+      this.dateObj.month = this.month + month;
       this.dateObj.day = day;
       this.$emit("change");
     },
     nextMonth(val) {
-      if (val) {
+      if (val === 1) {
         if (this.month === 11 && this.year < this.maxYear) {
           this.year++;
           this.month = 0;
@@ -140,7 +175,7 @@ export default {
           this.month++;
         }
         return;
-      } else if (!val) {
+      } else if (val === -1) {
         if (this.month === 0 && this.year > this.minYear) {
           this.year--;
           this.month = 11;
@@ -153,14 +188,14 @@ export default {
         return;
       }
     },
-    disable(day) {
+    disable(day, out) {
       if (this.maxYear === this.year && this.month === this.maxMonth) {
-        if (day > this.maxDay) {
+        if ((day > this.maxDay && day !== null) || out === 1) {
           return true;
         }
         return false;
       } else if (this.year === this.minYear && this.month === this.minMonth) {
-        if (day < this.minDay) {
+        if ((day < this.minDay && day !== null) || out === -1) {
           return true;
         }
         return false;
@@ -168,21 +203,29 @@ export default {
         return false;
       }
     },
-    chosen(day) {
+    chosen(day, addMonth) {
+      let month = this.month + addMonth;
+      let year = this.dateObj.year;
+      if (month === 12) {
+        year++;
+        month = 0;
+      } else if (month === -1) {
+        year--;
+        month = 11;
+      }
       return (
-        day === this.day &&
-        this.year === this.dateObj.year &&
-        this.month === this.dateObj.month
+        day === this.dateObj.day && this.year === year && this.dateObj.month === month
       );
     }
   },
   watch: {
-    outUpdate() {
-      this.initilaze();
+    outUpdate: {
+      handler: function() {
+        this.initilaze();
+      },
+      immediate: true,
+      deep: false
     }
-  },
-  created: function() {
-    this.initilaze();
   },
   beforeDestroy: function() {
     this.vueMode.payload = this.month;
@@ -266,6 +309,9 @@ export default {
           color: black;
           font-size: 1.2em;
           color: rgb(78, 78, 78);
+        }
+        .out {
+          color: rgb(187, 186, 186);
         }
         button:hover {
           background-color: rgb(219, 216, 216);

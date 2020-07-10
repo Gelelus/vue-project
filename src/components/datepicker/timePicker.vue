@@ -5,13 +5,13 @@
     >
     <ul class="hour-picker">
       <p>HH</p>
-      <li v-for="i in 24" :key="i" @click="setHour(i - 1)">
+      <li v-for="i in 24" :key="i" @click="setTime(i - 1, 'h')">
         {{ prittyTime(i - 1) }}
       </li>
     </ul>
     <ul class="min-picker">
       <p>mm</p>
-      <li v-for="i in 60" :key="i" @click="setMinute(i - 1)">
+      <li v-for="i in 60" :key="i" @click="setTime(i - 1, 'm')">
         {{ prittyTime(i - 1) }}
       </li>
     </ul>
@@ -37,6 +37,10 @@ export default {
     displaySec: Boolean
   },
   methods: {
+    setTime(t, type) {
+      this.dateObj[type] = this.prittyTime(t);
+      this.$emit("change");
+    },
     setHour(hour) {
       this.dateObj.h = this.prittyTime(hour);
       this.$emit("change");

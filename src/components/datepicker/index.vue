@@ -162,16 +162,17 @@ export default {
     }
   },
   watch: {
-    value: function() {
-      const startDate = new Date(this.value);
-      if (startDate.toString() !== this.outValue) {
-        this.outUpdate = !this.outUpdate;
-      }
-      this.initilaze(startDate);
+    value: {
+      handler: function() {
+        const startDate = new Date(this.value);
+        if (startDate.toString() !== this.outValue) {
+          this.outUpdate = !this.outUpdate;
+        }
+        this.initilaze(startDate);
+      },
+      immediate: true,
+      deep: true
     }
-  },
-  created: function() {
-    this.initilaze(new Date(this.value));
   }
 };
 </script>

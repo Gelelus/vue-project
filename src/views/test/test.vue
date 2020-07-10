@@ -6,6 +6,8 @@
       :first-day-of-week="firstDayOfWeek"
       :header-date-format="dateFormat"
       :displaySec="false"
+      :maxDate="maxDate"
+      :minDate="minDate"
     />
   </div>
 </template>
