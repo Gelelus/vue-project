@@ -17,7 +17,7 @@
     </ul>
     <ul class="sec-picker" v-if="displaySec">
       <p>ss</p>
-      <li v-for="i in 60" :key="i" @click="setSecond(i - 1)">
+      <li v-for="i in 60" :key="i" @click="setTime(i - 1, 's')">
         {{ prittyTime(i - 1) }}
       </li>
     </ul>
@@ -39,18 +39,6 @@ export default {
   methods: {
     setTime(t, type) {
       this.dateObj[type] = this.prittyTime(t);
-      this.$emit("change");
-    },
-    setHour(hour) {
-      this.dateObj.h = this.prittyTime(hour);
-      this.$emit("change");
-    },
-    setMinute(minute) {
-      this.dateObj.m = this.prittyTime(minute);
-      this.$emit("change");
-    },
-    setSecond(sec) {
-      this.dateObj.s = this.prittyTime(sec);
       this.$emit("change");
     },
     prittyTime(i) {

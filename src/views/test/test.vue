@@ -1,6 +1,8 @@
 <template>
   <div>
+    <br />
     <input v-model="date" placeholder="отредактируй меня" style="width: 60%" />
+    <br />
     <app-datepicker
       v-model="date"
       :first-day-of-week="firstDayOfWeek"
