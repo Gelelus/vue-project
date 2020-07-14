@@ -116,6 +116,7 @@ export default {
           }
         }
       }
+      this.$emit("monthData", data);
       return data;
     }
   },

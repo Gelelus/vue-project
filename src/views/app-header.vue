@@ -1,5 +1,5 @@
 <template>
-  <v-card color="grey lighten-4" flat tile>
+  <v-card color="grey lighten-4 header" flat tile>
     <v-toolbar dense>
       <v-toolbar-title>Vue project</v-toolbar-title>
       <template v-if="user">
@@ -42,6 +42,9 @@ export default {
 </script>
 
 <style lang="scss">
+.header {
+  margin-bottom: 0.5em;
+}
 a {
   font-weight: bold;
   color: #2c3e50;
