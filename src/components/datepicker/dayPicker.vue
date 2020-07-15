@@ -28,7 +28,8 @@
                 :disabled="dayData.disable"
                 :class="{
                   chosen: dayData.chosen,
-                  out: dayData.out
+                  out: dayData.out,
+                  holiday: dayData.holiday
                 }"
               >
                 {{ dayData.day }}
@@ -90,7 +91,8 @@ export default {
               day: startDay,
               disable: this.disable(startDay),
               chosen: this.chosen(startDay, 0),
-              month: 0
+              month: 0,
+              holiday: this.holiday(startDay)
             };
             startDay++;
           } else {
@@ -126,7 +128,8 @@ export default {
     daysOfWeek: Array,
     vueMode: Object,
     firstDayOfWeek: { type: [String, Number], default: 0 },
-    outUpdate: Boolean
+    outUpdate: Boolean,
+    freeDays: { type: Array, default: () => [] }
   },
   methods: {
     initilaze() {
@@ -224,6 +227,11 @@ export default {
         this.dateObj.year === year &&
         this.dateObj.month === month
       );
+    },
+    holiday(day) {
+      return this.freeDays.find(date => {
+        return this.month === date.month - 1 && day === date.day;
+      });
     }
   },
   watch: {
@@ -244,6 +252,9 @@ export default {
 <style lang="scss">
 .chosen {
   border: 1px solid #1867c0;
+}
+.holiday {
+  color: rgb(165, 1, 1) !important;
 }
 .day-picker-container {
   height: 280px;

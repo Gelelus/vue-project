@@ -30,6 +30,7 @@
         :firstDayOfWeek="firstDayOfWeek"
         :headerDateFormat="headerDateFormat"
         :outUpdate="outUpdate"
+        :freeDays="freeDays"
       />
       <MonthPicker
         :vueMode="vueMode"
@@ -120,7 +121,8 @@ export default {
     minDate: { type: [String, Date], default: null },
     displaySec: { type: Boolean, default: false },
     displayHeader: { type: Boolean, default: true },
-    pickerBorder: { type: Boolean, default: false }
+    pickerBorder: { type: Boolean, default: false },
+    freeDays: { type: Array, default: () => [] }
   },
   components: {
     DayPicker: DayPicker,

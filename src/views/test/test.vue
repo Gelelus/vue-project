@@ -4,14 +4,16 @@
     <input v-model="date" placeholder="отредактируй меня" style="width: 60%" />
     <br />
     <div class="test-vue">
-      <app-datepicker
-        v-model="date"
-        :first-day-of-week="firstDayOfWeek"
-        :header-date-format="dateFormat"
-        :displaySec="false"
-        :maxDate="maxDate"
-        :minDate="minDate"
-      />
+      <span class="test-border">
+        <app-datepicker
+          v-model="date"
+          :first-day-of-week="firstDayOfWeek"
+          :header-date-format="dateFormat"
+          :displaySec="false"
+          :maxDate="maxDate"
+          :minDate="minDate"
+        />
+      </span>
     </div>
   </div>
 </template>
@@ -40,6 +42,10 @@ export default {
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  border: 1px solid black;
+  .test-border {
+    border-left: 1px solid rgb(23, 36, 148);
+    border-right: 1px solid rgb(23, 36, 148);
+    border-bottom: 1px solid rgb(23, 36, 148);
+  }
 }
 </style>

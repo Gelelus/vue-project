@@ -6,18 +6,14 @@
         :first-day-of-week="firstDayOfWeek"
         :displaySec="false"
         :displayHeader="false"
+        :freeDays="freeDays"
         @newData="setDataFromPicker"
       />
       <v-divider></v-divider>
-      <v-select
-        :items="selectItems"
-        v-model="calendarMode"
-        label="Режим просмотра"
-        solo
-        dense
-      />
+      <v-select :items="selectItems" v-model="calendarMode" solo dense />
     </div>
     <div class="container-center">
+      <!-- отделить не забыть -->
       <template v-if="calendarMode">
         <div class="row-calendar" v-for="(week, i) in monthData" :key="i">
           <div class="col-calendar" v-for="(dayData, j) in week" :key="j">
@@ -25,57 +21,78 @@
             <div :class="{ outMonth: dayData.out }">
               {{ dayData.day }}
             </div>
+            <div class="day-holiday" v-if="dayData.holiday">
+              <div>{{ dayData.holiday.name }}</div>
+            </div>
           </div>
         </div>
       </template>
+      <!--  -->
+      <!-- отделить не забыть -->
       <template v-else>
         <div class="day-calendar">
           <div class="row-calendar row-day">
-            <div
-              class="col-calendar"
-              v-for="(dayName, i) in daysOfWeek"
-              :key="i"
-            >
-              {{ dayName }}
-              <br />
-              15
+            <div class="col-calendar " v-for="(day, i) in week" :key="i">
+              <div class="day-title">
+                <span class="day-name">{{ daysOfWeek[i] }}</span>
+                <br />
+                <span class="day-number">{{ day.day }}</span>
+              </div>
             </div>
           </div>
           <div class="row-calendar row-day" v-for="i in 24" :key="i">
-            <span class="time">{{ i + " AM" }}</span>
+            <span class="time">{{ i - 1 + ":" + "00" }}</span>
             <div class="col-calendar" v-for="i in 7" :key="i">
               {{ "" }}
             </div>
           </div>
         </div>
       </template>
+      <!--  -->
     </div>
   </div>
 </template>
 
 <script>
 import datepicker from "../../components/datepicker";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "calendar",
   data: () => ({
     date: new Date(),
-    monthData: null,
+    monthData: [],
     firstDayOfWeek: "1",
     selectItems: [
       { text: "month", value: true },
       { text: "week", value: false }
     ],
     calendarMode: true,
-    daysOfWeek: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "San"]
+    daysOfWeek: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
   }),
   components: {
     appDatepicker: datepicker
   },
+  computed: {
+    ...mapGetters(["freeDays"]),
+    week() {
+      return (
+        this.monthData.find(item => {
+          return item.some(day => {
+            return day.chosen;
+          });
+        }) || this.monthData[0]
+      );
+    }
+  },
   methods: {
+    ...mapActions(["getfreeDays"]),
     setDataFromPicker(data) {
       this.monthData = data;
     }
+  },
+  created() {
+    this.getfreeDays();
   }
 };
 </script>
@@ -120,6 +137,37 @@ export default {
         padding: 2px;
         border-bottom: 0.5px solid rgb(165, 163, 163);
         border-right: 0.5px solid rgb(165, 163, 163);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        .day-holiday {
+          transition: 0.5s height;
+          color: rgb(131, 1, 1);
+          overflow: hidden;
+          border-radius: 5px;
+          background-color: rgb(2, 88, 2);
+          color: white;
+          height: 1.5em;
+          font-size: 0.7em;
+          padding: 0 5px 5px 5px;
+          cursor: pointer;
+        }
+        .day-holiday:hover {
+          height: 100%;
+        }
+        .day-title {
+          position: relative;
+          top: -1.5em;
+          .day-name {
+            color: #70757a;
+            font-size: 11px;
+          }
+          .day-number {
+            color: #70757a;
+            font-size: 26px;
+          }
+        }
+
         .outMonth {
           color: rgb(187, 186, 186);
         }

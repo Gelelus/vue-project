@@ -16,6 +16,12 @@
           DatePicker
         </v-toolbar-items>
       </router-link>
+      <v-divider class="mx-4" inset vertical />
+      <router-link to="/calendar">
+        <v-toolbar-items>
+          Calendar
+        </v-toolbar-items>
+      </router-link>
       <v-spacer></v-spacer>
       <router-link to="/auth" v-if="!user">
         <v-btn icon><v-icon>mdi-login-variant</v-icon> </v-btn>
