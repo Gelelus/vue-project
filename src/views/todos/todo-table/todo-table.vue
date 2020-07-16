@@ -14,12 +14,13 @@
     <template v-slot:item.actions="{ item }">
       <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
       <v-icon small class="mr-2" @click="deleteItem(item)">mdi-delete</v-icon>
-      <v-icon small class="mr-2" @click="save(item)"
+      <v-icon v-if="!item.todoType" small class="mr-2" @click="save(item)"
         >mdi-content-save-move-outline</v-icon
       >
     </template>
     <template v-slot:item.status="{ item }">
-      <v-checkbox
+      <v-label v-if="item.todoType">{{item.todoType.slice(5) + ' Todo'}}</v-label>
+      <v-checkbox v-else
         :label="item.todoStatus ? 'compoleted' : 'uncompleted'"
         v-model="item.todoStatus"
       />
@@ -70,8 +71,10 @@ export default {
       this.deleteTodo(item._id);
     },
     save(item) {
-      this.editTodo(item);
-    }
+      if(item.todoStatus === true){
+        this.deleteTodo(item._id);
+      }
+    }  
   }
 };
 </script>

@@ -8,20 +8,10 @@
         label="Todo description"
       ></v-text-field>
       <v-text-field
-        v-model="detailTodo.date"
-        label="Todo date of creation"
-        readonly
-      ></v-text-field>
-      <v-text-field
         v-model="detailTodo._id"
         label="Todo Id"
         readonly
       ></v-text-field>
-      <v-select
-        :items="selectItems"
-        label="Status"
-        v-model="detailTodo.todoStatus"
-      />
     </v-card-text>
 
     <v-card-actions>
@@ -37,10 +27,7 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   data: () => ({
-    selectItems: [
-      { text: "compoleted", value: true },
-      { text: "uncompleted", value: false }
-    ]
+  
   }),
   computed: {
     ...mapGetters(["detailTodo"])

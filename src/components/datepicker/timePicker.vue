@@ -5,19 +5,19 @@
     >
     <ul class="hour-picker">
       <p>HH</p>
-      <li v-for="i in 24" :key="i" @click="setHour(i - 1)">
+      <li v-for="i in 24" :key="i" @click="setTime(i - 1, 'h')">
         {{ prittyTime(i - 1) }}
       </li>
     </ul>
     <ul class="min-picker">
       <p>mm</p>
-      <li v-for="i in 60" :key="i" @click="setMinute(i - 1)">
+      <li v-for="i in 60" :key="i" @click="setTime(i - 1, 'm')">
         {{ prittyTime(i - 1) }}
       </li>
     </ul>
     <ul class="sec-picker" v-if="displaySec">
       <p>ss</p>
-      <li v-for="i in 60" :key="i" @click="setSecond(i - 1)">
+      <li v-for="i in 60" :key="i" @click="setTime(i - 1, 's')">
         {{ prittyTime(i - 1) }}
       </li>
     </ul>
@@ -37,16 +37,8 @@ export default {
     displaySec: Boolean
   },
   methods: {
-    setHour(hour) {
-      this.dateObj.h = this.prittyTime(hour);
-      this.$emit("change");
-    },
-    setMinute(minute) {
-      this.dateObj.m = this.prittyTime(minute);
-      this.$emit("change");
-    },
-    setSecond(sec) {
-      this.dateObj.s = this.prittyTime(sec);
+    setTime(t, type) {
+      this.dateObj[type] = this.prittyTime(t);
       this.$emit("change");
     },
     prittyTime(i) {

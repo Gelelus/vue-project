@@ -1,5 +1,5 @@
 <template>
-  <v-card color="grey lighten-4" flat tile>
+  <v-card color="grey lighten-4 header" flat tile>
     <v-toolbar dense>
       <v-toolbar-title>Vue project</v-toolbar-title>
       <template v-if="user">
@@ -14,6 +14,12 @@
       <router-link to="/datepicker">
         <v-toolbar-items>
           DatePicker
+        </v-toolbar-items>
+      </router-link>
+      <v-divider class="mx-4" inset vertical />
+      <router-link to="/calendar">
+        <v-toolbar-items>
+          Calendar
         </v-toolbar-items>
       </router-link>
       <v-spacer></v-spacer>
@@ -42,6 +48,9 @@ export default {
 </script>
 
 <style lang="scss">
+.header {
+  margin-bottom: 0.5em;
+}
 a {
   font-weight: bold;
   color: #2c3e50;

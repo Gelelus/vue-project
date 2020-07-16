@@ -1,6 +1,6 @@
 <template>
-  <div class="picker-container">
-    <div class="picker-header">
+  <div class="picker-container" :style="{ width: width }">
+    <div class="picker-header" v-if="displayHeader">
       <div class="picker-year" @click="setPicker('YearPicker')">
         <span>{{ dateObj.year }}</span>
       </div>
@@ -18,10 +18,11 @@
         </div>
       </div>
     </div>
-    <div class="picker-display">
+    <div class="picker-display" :class="{ pickerBorder: pickerBorder }">
       <dayPicker
         v-if="vueMode.component === 'DayPicker'"
         @change="dateChange"
+        @monthData="monthDataCahange"
         :vueMode="vueMode"
         :dateObj="dateObj"
         :daysOfWeek="daysOfWeek"
@@ -29,6 +30,7 @@
         :firstDayOfWeek="firstDayOfWeek"
         :headerDateFormat="headerDateFormat"
         :outUpdate="outUpdate"
+        :freeDays="freeDays"
       />
       <MonthPicker
         :vueMode="vueMode"
@@ -117,7 +119,11 @@ export default {
     headerDateFormat: { type: String, default: null },
     maxDate: { type: [String, Date], default: null },
     minDate: { type: [String, Date], default: null },
-    displaySec: { type: Boolean, default: false }
+    displaySec: { type: Boolean, default: false },
+    displayHeader: { type: Boolean, default: true },
+    pickerBorder: { type: Boolean, default: false },
+    freeDays: { type: Array, default: () => [] },
+    width: { type: String, default: "300px" }
   },
   components: {
     DayPicker: DayPicker,
@@ -128,6 +134,9 @@ export default {
   methods: {
     setPicker(picker) {
       this.vueMode.component = picker;
+    },
+    monthDataCahange(data) {
+      this.$emit("newData", data);
     },
     dateChange() {
       const date = new Date(
@@ -162,30 +171,31 @@ export default {
     }
   },
   watch: {
-    value: function() {
-      const startDate = new Date(this.value);
-      if (startDate.toString() !== this.outValue) {
-        this.outUpdate = !this.outUpdate;
-      }
-      this.initilaze(startDate);
+    value: {
+      handler: function() {
+        const startDate = new Date(this.value);
+        if (startDate.toString() !== this.outValue) {
+          this.outUpdate = !this.outUpdate;
+        }
+        this.initilaze(startDate);
+      },
+      immediate: true,
+      deep: true
     }
-  },
-  created: function() {
-    this.initilaze(new Date(this.value));
   }
 };
 </script>
 
 <style lang="scss">
+.picker-border {
+  border: 1px solid #1867c0;
+}
 .picker-container {
-  margin: 1rem auto 1rem auto;
-  width: 300px;
   text-align: left;
   -moz-user-select: none;
   -khtml-user-select: none;
   user-select: none;
   .picker-display {
-    border: 1px solid #1867c0;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
   }

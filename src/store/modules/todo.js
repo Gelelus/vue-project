@@ -1,12 +1,16 @@
 import Vue from "vue";
 
+const initialTodoState = {
+  name: "",
+  description: "",
+  todoType: "Common",
+  date: new Date(),
+  _id: ""
+}
+
 const state = {
   todos: [],
-  editedTodo: {
-    name: "",
-    todoStatus: false,
-    description: ""
-  },
+  editedTodo: { ...initialTodoState },
   dialog: false,
   edited: false,
   detailTodo: {}
@@ -22,11 +26,7 @@ const getters = {
 
 const mutations = {
   editMode(state, payload) {
-    let todo = {
-      name: "",
-      todoStatus: false,
-      description: ""
-    };
+    let todo = { ...initialTodoState };
     if (payload) {
       todo = payload;
       state.edited = true;
@@ -55,10 +55,16 @@ const actions = {
   getTodoList({ commit }) {
     Vue.axios
       .get("http://localhost:4200/todo")
-      .then(res => {
-        commit("setList", res.data);
+      .then((res) => {
+        const data = [
+          ...res.data.monthTodos,
+          ...res.data.weekTodos,
+          ...res.data.dayTodos,
+          ...res.data.commonTodos,
+        ];
+        commit("setList", data);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   },
@@ -76,8 +82,9 @@ const actions = {
   addTodo: ({ dispatch }, payload) => {
     const postData = {
       name: payload.name,
-      todoStatus: payload.todoStatus,
-      description: payload.description
+      todoType: payload.todoType,
+      description: payload.description,
+      date: payload.date
     };
     Vue.axios
       .post("http://localhost:4200/todo", postData)
@@ -106,9 +113,9 @@ const actions = {
   },
   editTodo: ({ dispatch }, payload) => {
     const putData = {
+      todoType: payload.todoType,
       name: payload.name,
       description: payload.description,
-      todoStatus: payload.todoStatus,
       _id: payload._id
     };
     Vue.axios
