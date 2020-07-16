@@ -1,5 +1,5 @@
 <template>
-  <div class="picker-container">
+  <div class="picker-container" :style="{ width: width }">
     <div class="picker-header" v-if="displayHeader">
       <div class="picker-year" @click="setPicker('YearPicker')">
         <span>{{ dateObj.year }}</span>
@@ -122,7 +122,8 @@ export default {
     displaySec: { type: Boolean, default: false },
     displayHeader: { type: Boolean, default: true },
     pickerBorder: { type: Boolean, default: false },
-    freeDays: { type: Array, default: () => [] }
+    freeDays: { type: Array, default: () => [] },
+    width: { type: String, default: "300px" }
   },
   components: {
     DayPicker: DayPicker,
@@ -190,7 +191,6 @@ export default {
   border: 1px solid #1867c0;
 }
 .picker-container {
-  width: 300px;
   text-align: left;
   -moz-user-select: none;
   -khtml-user-select: none;

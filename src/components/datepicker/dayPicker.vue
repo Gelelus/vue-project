@@ -29,7 +29,7 @@
                 :class="{
                   chosen: dayData.chosen,
                   out: dayData.out,
-                  holiday: dayData.holiday
+                  holiday: dayData.holiday,
                 }"
               >
                 {{ dayData.day }}
@@ -54,7 +54,7 @@ export default {
     maxDay: 33,
     minYear: 1,
     minMonth: 0,
-    minday: -1
+    minday: -1,
   }),
   computed: {
     weekDays() {
@@ -89,29 +89,32 @@ export default {
             }
             data[i][j] = {
               day: startDay,
+              date: { year: this.year, month: this.month },
               disable: this.disable(startDay),
               chosen: this.chosen(startDay, 0),
               month: 0,
-              holiday: this.holiday(startDay)
+              holiday: this.holiday(startDay),
             };
             startDay++;
           } else {
             if (startDay > daysInMonth) {
               data[i][j] = {
                 day: startDayNextMonth,
+                date: { year: this.year, month: this.month-1 },
                 disable: this.disable(null, 1),
                 chosen: this.chosen(startDayNextMonth, 1),
                 out: true,
-                month: 1
+                month: 1,
               };
               startDayNextMonth++;
             } else {
               data[i][j] = {
                 day: startDayPreviousMonth,
+                date: { year: this.year, month: this.month+1 },
                 chosen: this.chosen(startDayPreviousMonth, -1),
                 disable: this.disable(null, -1),
                 out: true,
-                month: -1
+                month: -1,
               };
               startDayPreviousMonth++;
             }
@@ -120,7 +123,7 @@ export default {
       }
       this.$emit("monthData", data);
       return data;
-    }
+    },
   },
   props: {
     dateObj: Object,
@@ -129,7 +132,7 @@ export default {
     vueMode: Object,
     firstDayOfWeek: { type: [String, Number], default: 0 },
     outUpdate: Boolean,
-    freeDays: { type: Array, default: () => [] }
+    freeDays: { type: Array, default: () => [] },
   },
   methods: {
     initilaze() {
@@ -229,10 +232,10 @@ export default {
       );
     },
     holiday(day) {
-      return this.freeDays.find(date => {
+      return this.freeDays.find((date) => {
         return this.month === date.month - 1 && day === date.day;
       });
-    }
+    },
   },
   watch: {
     outUpdate: {
@@ -240,12 +243,12 @@ export default {
         this.initilaze();
       },
       immediate: true,
-      deep: false
-    }
+      deep: false,
+    },
   },
   beforeDestroy: function() {
     this.vueMode.payload = this.month;
-  }
+  },
 };
 </script>
 

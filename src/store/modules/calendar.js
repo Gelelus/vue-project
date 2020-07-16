@@ -7,43 +7,71 @@ function apiGetterUrl(minDate, maxDate) {
 }
 
 const state = {
-  freeDays: []
+  freeDays: [],
+  commonTodos: [],
+  monthTodos: [],
+  weekTodos: [],
+  dayTodos: [],
 };
 
 const getters = {
-  freeDays: state => state.freeDays
+  freeDays: (state) => state.freeDays,
+  commonTodos: (state) => state.commonTodos,
+  monthTodos: (state) => state.monthTodos,
+  weekTodos: (state) => state.weekTodos,
+  dayTodos: (state) => state.dayTodos,
 };
 
 const mutations = {
   setfreeDays(state, payload) {
     state.freeDays = payload;
-  }
+  },
+  setTodos(state, payload) {
+    state.commonTodos = payload.commonTodos;
+    state.monthTodos = payload.monthTodos;
+    state.weekTodos = payload.weekTodos;
+    state.dayTodos = payload.dayTodos;
+  },
 };
 
 const actions = {
-  getfreeDays({ commit }, payload) {
+  getTodoDays({ commit }, payload) {
+    Vue.axios
+      .get("http://localhost:4200/todo/onMonth", {
+        params: {
+          year: payload.year,
+          month: payload.month,
+        },
+      })
+      .then((res) => {
+        commit("setTodos", res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
+  getfreeDays({ commit }) {
     Vue.axios
       .get(apiGetterUrl())
-      .then(res => {
-        let payload = res.data.items.map(day => {
+      .then((res) => {
+        let payload = res.data.items.map((day) => {
           return {
             name: day.summary,
             month: +day.start.date.slice(-5, -3),
-            day: +day.start.date.slice(-2)
+            day: +day.start.date.slice(-2),
           };
         });
         commit("setfreeDays", payload);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
-        console.log(payload);
       });
-  }
+  },
 };
 
 export default {
   state,
   mutations,
   actions,
-  getters
+  getters,
 };
